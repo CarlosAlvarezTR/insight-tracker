@@ -161,8 +161,25 @@ section h2 {
     gap: 12px;
 }
 
-.score-input-row input[type="number"] {
+.score-input-row > input[type="number"] {
     flex: 1;
+}
+
+.frequency-row {
+    align-items: flex-end;
+}
+
+.count-input {
+    flex: 1;
+}
+
+.count-input label {
+    font-size: 0.9em;
+}
+
+.count-separator {
+    margin-bottom: 14px;
+    color: #777;
 }
 
 .na-option {
@@ -177,6 +194,11 @@ section h2 {
 .score-input-row input[type="number"]:disabled {
     background-color: #e9ecef;
     cursor: not-allowed;
+}
+
+.severity-result {
+    margin-bottom: 8px !important;
+    font-size: 1.25em;
 }
 
 .formula-note {

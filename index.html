@@ -25,8 +25,8 @@
       <section id="usability-options" class="hidden">
         <h2>Usability Issues Scoring</h2>
         <p>
-          Enter the study averages below to calculate the issue&apos;s severity and
-          priority. Select N/A when a measure was not collected.
+          Score what you observed during the study. Select N/A when an impact
+          could not be assessed; the available observations will be normalized.
         </p>
 
         <div class="form-group">
@@ -48,86 +48,56 @@
         </div>
 
         <fieldset class="form-group score-fieldset">
-          <legend>1. Average Number of Users Affected (0-10):</legend>
-          <div class="score-input-row">
-            <input
-              type="number"
-              id="score-users-affected"
-              min="0"
-              max="10"
-              step="0.1"
-              placeholder="0-10"
-              aria-describedby="hint-users-affected error-users-affected"
-            />
-            <label class="na-option" for="na-users-affected">
-              <input type="checkbox" id="na-users-affected" /> N/A
+          <legend>1. Frequency observed:</legend>
+          <div class="score-input-row frequency-row">
+            <div class="count-input">
+              <label for="affected-users">Affected users</label>
+              <input type="number" id="affected-users" min="0" step="1" placeholder="e.g., 3" aria-describedby="hint-frequency error-frequency" />
+            </div>
+            <span class="count-separator" aria-hidden="true">of</span>
+            <div class="count-input">
+              <label for="total-participants">Total participants</label>
+              <input type="number" id="total-participants" min="1" step="1" placeholder="e.g., 10" aria-describedby="hint-frequency error-frequency" />
+            </div>
+            <label class="na-option" for="na-frequency">
+              <input type="checkbox" id="na-frequency" /> N/A
             </label>
           </div>
-          <small class="input-hint" id="hint-users-affected">Average the number of participants affected across the study.</small>
-          <span class="error-message" id="error-users-affected"></span>
+          <small class="input-hint" id="hint-frequency">Enter the number of unique users affected out of all participants. The proportion is converted to 0–5.</small>
+          <span class="error-message" id="error-frequency"></span>
         </fieldset>
 
         <fieldset class="form-group score-fieldset">
-          <legend>2. Average Ease of Use (0-5):</legend>
+          <legend>2. Impact on ease of use (0–5):</legend>
           <div class="score-input-row">
-            <input
-              type="number"
-              id="score-ease"
-              min="0"
-              max="5"
-              step="0.1"
-              placeholder="0-5"
-              aria-describedby="hint-ease error-ease"
-            />
-            <label class="na-option" for="na-ease">
-              <input type="checkbox" id="na-ease" /> N/A
-            </label>
+            <input type="number" id="score-ease-impact" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-ease-impact error-ease-impact" />
+            <label class="na-option" for="na-ease-impact"><input type="checkbox" id="na-ease-impact" /> N/A</label>
           </div>
-          <small class="input-hint" id="hint-ease">0=very difficult, 5=very easy. This positive measure is reversed in the difficulty score.</small>
-          <span class="error-message" id="error-ease"></span>
+          <small class="input-hint" id="hint-ease-impact">0=no observed impact · 3=noticeable friction · 5=task was extremely difficult or blocked.</small>
+          <span class="error-message" id="error-ease-impact"></span>
         </fieldset>
 
         <fieldset class="form-group score-fieldset">
-          <legend>3. Average Needs Met (0-5):</legend>
+          <legend>3. Impact on perceived complexity (0–5):</legend>
           <div class="score-input-row">
-            <input
-              type="number"
-              id="score-needs-met"
-              min="0"
-              max="5"
-              step="0.1"
-              placeholder="0-5"
-              aria-describedby="hint-needs-met error-needs-met"
-            />
-            <label class="na-option" for="na-needs-met">
-              <input type="checkbox" id="na-needs-met" /> N/A
-            </label>
+            <input type="number" id="score-complexity-impact" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-complexity-impact error-complexity-impact" />
+            <label class="na-option" for="na-complexity-impact"><input type="checkbox" id="na-complexity-impact" /> N/A</label>
           </div>
-          <small class="input-hint" id="hint-needs-met">0=does not meet needs, 5=fully meets needs. This positive measure is reversed in the difficulty score.</small>
-          <span class="error-message" id="error-needs-met"></span>
+          <small class="input-hint" id="hint-complexity-impact">0=no complexity concern · 3=system felt more complex than expected · 5=system felt unnecessarily complex.</small>
+          <span class="error-message" id="error-complexity-impact"></span>
         </fieldset>
 
         <fieldset class="form-group score-fieldset">
-          <legend>4. Average Complexity (0-5):</legend>
+          <legend>4. Impact on tool onboarding (0–5):</legend>
           <div class="score-input-row">
-            <input
-              type="number"
-              id="score-complexity"
-              min="0"
-              max="5"
-              step="0.1"
-              placeholder="0-5"
-              aria-describedby="hint-complexity error-complexity"
-            />
-            <label class="na-option" for="na-complexity">
-              <input type="checkbox" id="na-complexity" /> N/A
-            </label>
+            <input type="number" id="score-onboarding-impact" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-onboarding-impact error-onboarding-impact" />
+            <label class="na-option" for="na-onboarding-impact"><input type="checkbox" id="na-onboarding-impact" /> N/A</label>
           </div>
-          <small class="input-hint" id="hint-complexity">0=not complex, 5=very complex.</small>
-          <span class="error-message" id="error-complexity"></span>
+          <small class="input-hint" id="hint-onboarding-impact">0=no onboarding concern · 3=learning would require effort · 5=users expected onboarding to be very difficult.</small>
+          <span class="error-message" id="error-onboarding-impact"></span>
         </fieldset>
 
-        <button id="btn-calculate-usability">Calculate Priority</button>
+        <button id="btn-calculate-usability">Calculate Severity</button>
 
         <div id="usability-result" class="result-display" aria-live="polite"></div>
 

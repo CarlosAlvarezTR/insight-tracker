@@ -26,34 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Code for Usability Issues Scoring ---
   const calculateUsabilityButton = document.getElementById('btn-calculate-usability');
   const usabilityResultDiv = document.getElementById('usability-result');
+  const affectedUsersInput = document.getElementById('affected-users');
+  const totalParticipantsInput = document.getElementById('total-participants');
+  const frequencyNaInput = document.getElementById('na-frequency');
+  const frequencyErrorSpan = document.getElementById('error-frequency');
   const usabilityFields = [
       {
-          input: document.getElementById('score-users-affected'),
-          na: document.getElementById('na-users-affected'),
-          error: document.getElementById('error-users-affected'),
-          label: 'users affected',
-          max: 10
+          input: document.getElementById('score-ease-impact'),
+          na: document.getElementById('na-ease-impact'),
+          error: document.getElementById('error-ease-impact'),
+          label: 'ease of use impact'
       },
       {
-          input: document.getElementById('score-ease'),
-          na: document.getElementById('na-ease'),
-          error: document.getElementById('error-ease'),
-          label: 'ease of use',
-          max: 5
+          input: document.getElementById('score-complexity-impact'),
+          na: document.getElementById('na-complexity-impact'),
+          error: document.getElementById('error-complexity-impact'),
+          label: 'perceived complexity impact'
       },
       {
-          input: document.getElementById('score-needs-met'),
-          na: document.getElementById('na-needs-met'),
-          error: document.getElementById('error-needs-met'),
-          label: 'needs met',
-          max: 5
-      },
-      {
-          input: document.getElementById('score-complexity'),
-          na: document.getElementById('na-complexity'),
-          error: document.getElementById('error-complexity'),
-          label: 'complexity',
-          max: 5
+          input: document.getElementById('score-onboarding-impact'),
+          na: document.getElementById('na-onboarding-impact'),
+          error: document.getElementById('error-onboarding-impact'),
+          label: 'tool onboarding impact'
       }
   ];
 
@@ -76,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
           if (field.error) field.error.textContent = '';
           if (field.input) field.input.classList.remove('input-error');
       });
+      if (frequencyErrorSpan) frequencyErrorSpan.textContent = '';
+      if (affectedUsersInput) affectedUsersInput.classList.remove('input-error');
+      if (totalParticipantsInput) totalParticipantsInput.classList.remove('input-error');
       if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
   }
   
@@ -142,12 +139,63 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
+  if (frequencyNaInput && affectedUsersInput && totalParticipantsInput) {
+      frequencyNaInput.addEventListener('change', () => {
+          const isUnavailable = frequencyNaInput.checked;
+          affectedUsersInput.disabled = isUnavailable;
+          totalParticipantsInput.disabled = isUnavailable;
+          if (isUnavailable) {
+              affectedUsersInput.value = '';
+              totalParticipantsInput.value = '';
+              affectedUsersInput.classList.remove('input-error');
+              totalParticipantsInput.classList.remove('input-error');
+              if (frequencyErrorSpan) frequencyErrorSpan.textContent = '';
+          }
+          if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
+      });
+
+      [affectedUsersInput, totalParticipantsInput].forEach(input => {
+          input.addEventListener('input', () => {
+              affectedUsersInput.classList.remove('input-error');
+              totalParticipantsInput.classList.remove('input-error');
+              if (frequencyErrorSpan) frequencyErrorSpan.textContent = '';
+              if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
+          });
+      });
+  }
+
   // --- Logic for Usability Issues Calculate Button ---
   if (calculateUsabilityButton) {
       calculateUsabilityButton.addEventListener('click', () => {
           clearAllErrors();
           let isValid = true;
-          const values = [];
+          const observations = [];
+          const unavailableMeasures = [];
+
+          if (frequencyNaInput && frequencyNaInput.checked) {
+              observations.push(null);
+              unavailableMeasures.push('frequency');
+          } else {
+              const affectedUsers = Number(affectedUsersInput?.value);
+              const totalParticipants = Number(totalParticipantsInput?.value);
+              const validCounts = Number.isInteger(affectedUsers)
+                  && Number.isInteger(totalParticipants)
+                  && affectedUsers >= 0
+                  && totalParticipants > 0
+                  && affectedUsers <= totalParticipants;
+
+              if (!validCounts) {
+                  if (frequencyErrorSpan) {
+                      frequencyErrorSpan.textContent = 'Enter whole-number counts, with affected users no greater than total participants, or select N/A.';
+                  }
+                  affectedUsersInput?.classList.add('input-error');
+                  totalParticipantsInput?.classList.add('input-error');
+                  isValid = false;
+                  observations.push(null);
+              } else {
+                  observations.push(affectedUsers / totalParticipants * 5);
+              }
+          }
 
           usabilityFields.forEach(field => {
               if (!field.input || !field.na || !field.error) {
@@ -156,74 +204,47 @@ document.addEventListener('DOMContentLoaded', () => {
               }
 
               if (field.na.checked) {
-                  values.push(null);
+                  observations.push(null);
+                  unavailableMeasures.push(field.label);
                   return;
               }
 
-              const value = Number.parseFloat(field.input.value);
-              if (!Number.isFinite(value) || value < 0 || value > field.max) {
-                  displayError(
-                      field.input,
-                      field.error,
-                      `Please enter a number between 0 and ${field.max}, or select N/A.`
-                  );
+              const value = Number(field.input.value);
+              if (!Number.isInteger(value) || value < 0 || value > 5) {
+                  displayError(field.input, field.error, 'Please enter a whole number between 0 and 5, or select N/A.');
                   isValid = false;
-                  values.push(null);
+                  observations.push(null);
                   return;
               }
 
-              values.push(value);
+              observations.push(value);
           });
 
           if (!isValid) return;
 
-          const [usersAffected, ease, needsMet, complexity] = values;
-          const unavailableMeasures = usabilityFields
-              .filter((field, index) => values[index] === null)
-              .map(field => field.label);
-          const availableContributions = [
-              usersAffected,
-              ease === null ? null : 5 - ease,
-              needsMet === null ? null : 5 - needsMet,
-              complexity
-          ];
-          const contributionMaximums = [10, 5, 5, 5];
-          const availableMaximum = availableContributions.reduce(
-              (sum, contribution, index) => contribution === null ? sum : sum + contributionMaximums[index],
-              0
-          );
-
-          if (availableMaximum === 0) {
+          const availableObservations = observations.filter(value => value !== null);
+          if (availableObservations.length === 0) {
               usabilityResultDiv.innerHTML = `
-                  <p><strong>Priority score unavailable</strong></p>
-                  <p>Enter at least one study average to calculate a normalized score.</p>`;
+                  <p><strong>Severity unavailable</strong></p>
+                  <p>Enter at least one observation to calculate severity.</p>`;
               return;
           }
 
-          const availableTotal = availableContributions.reduce(
-              (sum, contribution) => contribution === null ? sum : sum + contribution,
-              0
-          );
-          const totalScore = availableTotal / availableMaximum * 25;
-          const difficultyContributions = availableContributions.slice(1);
-          const difficultyAvailableMaximum = difficultyContributions.reduce(
-              (sum, contribution, index) => contribution === null ? sum : sum + contributionMaximums[index + 1],
-              0
-          );
-          const difficultyAvailableTotal = difficultyContributions.reduce(
-              (sum, contribution) => contribution === null ? sum : sum + contribution,
-              0
-          );
-          const difficultyScore = difficultyAvailableMaximum === 0
-              ? null
-              : difficultyAvailableTotal / difficultyAvailableMaximum * 15;
+          const observationalAverage = availableObservations.reduce((sum, value) => sum + value, 0)
+              / availableObservations.length;
+          const severity = observationalAverage >= 4
+              ? { level: 1, label: 'Critical issue' }
+              : observationalAverage >= 3
+                  ? { level: 2, label: 'Major issue' }
+                  : observationalAverage >= 2
+                      ? { level: 3, label: 'Moderate issue' }
+                      : { level: 4, label: 'Minor issue' };
           const isNormalized = unavailableMeasures.length > 0;
 
           usabilityResultDiv.innerHTML = `
-              <p><strong>Users Affected:</strong> ${usersAffected === null ? 'N/A' : `${formatScore(usersAffected)} / 10`}</p>
-              <p><strong>Difficulty Score:</strong> ${difficultyScore === null ? 'N/A' : `${formatScore(difficultyScore)} / 15`}</p>
-              <p><strong>${isNormalized ? 'Normalized ' : ''}Total Priority Score:</strong> ${formatScore(totalScore)} / 25</p>
-              ${isNormalized ? `<p class="formula-note">Normalized from the available measures. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">Difficulty = (5 − ease) + (5 − needs met) + complexity</p>'}`;
+              <p class="severity-result"><strong>${severity.level} — ${severity.label}</strong></p>
+              <p><strong>${isNormalized ? 'Normalized ' : ''}observational average:</strong> ${formatScore(observationalAverage)} / 5</p>
+              ${isNormalized ? `<p class="formula-note">Calculated from ${availableObservations.length} of 4 factors. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">All four observational factors are equally weighted.</p>'}`;
       });
   }
 
