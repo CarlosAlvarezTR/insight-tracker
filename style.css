@@ -127,7 +127,8 @@ section h2 {
     font-size: 0.9em;
 }
 
-#btn-calculate-foundational {
+#btn-calculate-foundational,
+#btn-calculate-usability {
     background-color: #28a745; /* A green color */
     color: white;
     border: none;
@@ -139,8 +140,49 @@ section h2 {
     font-size: 16px;
 }
 
-#btn-calculate-foundational:hover {
+#btn-calculate-foundational:hover,
+#btn-calculate-usability:hover {
     background-color: #218838;
+}
+
+.score-fieldset {
+    padding: 0;
+    border: 0;
+}
+
+.score-fieldset legend {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.score-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.score-input-row input[type="number"] {
+    flex: 1;
+}
+
+.na-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 54px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.score-input-row input[type="number"]:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.formula-note {
+    margin-top: 10px !important;
+    color: #777;
+    font-size: 0.9em;
 }
 
 .result-display {

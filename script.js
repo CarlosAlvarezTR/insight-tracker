@@ -23,6 +23,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorEfficiencySpan = document.getElementById('error-efficiency');
   const errorDelightSpan = document.getElementById('error-delight');
 
+  // --- Code for Usability Issues Scoring ---
+  const calculateUsabilityButton = document.getElementById('btn-calculate-usability');
+  const usabilityResultDiv = document.getElementById('usability-result');
+  const usabilityFields = [
+      {
+          input: document.getElementById('score-users-affected'),
+          na: document.getElementById('na-users-affected'),
+          error: document.getElementById('error-users-affected'),
+          label: 'users affected',
+          max: 10
+      },
+      {
+          input: document.getElementById('score-ease'),
+          na: document.getElementById('na-ease'),
+          error: document.getElementById('error-ease'),
+          label: 'ease of use',
+          max: 5
+      },
+      {
+          input: document.getElementById('score-needs-met'),
+          na: document.getElementById('na-needs-met'),
+          error: document.getElementById('error-needs-met'),
+          label: 'needs met',
+          max: 5
+      },
+      {
+          input: document.getElementById('score-complexity'),
+          na: document.getElementById('na-complexity'),
+          error: document.getElementById('error-complexity'),
+          label: 'complexity',
+          max: 5
+      }
+  ];
+
   // --- Helper function to clear all individual error messages, input styles, and results ---
   function clearAllErrors() {
       // Clear Foundational Insight errors
@@ -37,7 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (scoreEfficiencyInput) scoreEfficiencyInput.classList.remove('input-error');
       if (scoreDelightInput) scoreDelightInput.classList.remove('input-error');
       
-      // Add similar clearing for usability section errors if you implement them later
+      // Clear Usability Issue errors and result
+      usabilityFields.forEach(field => {
+          if (field.error) field.error.textContent = '';
+          if (field.input) field.input.classList.remove('input-error');
+      });
+      if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
   }
   
   // --- Function to display an error for a specific input ---
@@ -81,6 +120,89 @@ document.addEventListener('DOMContentLoaded', () => {
           showInitialChoices();
       });
   });
+
+  // Keep N/A controls and their paired inputs synchronized.
+  usabilityFields.forEach(field => {
+      if (!field.input || !field.na) return;
+
+      field.na.addEventListener('change', () => {
+          field.input.disabled = field.na.checked;
+          if (field.na.checked) {
+              field.input.value = '';
+              field.input.classList.remove('input-error');
+              if (field.error) field.error.textContent = '';
+          }
+          if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
+      });
+
+      field.input.addEventListener('input', () => {
+          field.input.classList.remove('input-error');
+          if (field.error) field.error.textContent = '';
+          if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
+      });
+  });
+
+  // --- Logic for Usability Issues Calculate Button ---
+  if (calculateUsabilityButton) {
+      calculateUsabilityButton.addEventListener('click', () => {
+          clearAllErrors();
+          let isValid = true;
+          const values = [];
+
+          usabilityFields.forEach(field => {
+              if (!field.input || !field.na || !field.error) {
+                  isValid = false;
+                  return;
+              }
+
+              if (field.na.checked) {
+                  values.push(null);
+                  return;
+              }
+
+              const value = Number.parseFloat(field.input.value);
+              if (!Number.isFinite(value) || value < 0 || value > field.max) {
+                  displayError(
+                      field.input,
+                      field.error,
+                      `Please enter a number between 0 and ${field.max}, or select N/A.`
+                  );
+                  isValid = false;
+                  values.push(null);
+                  return;
+              }
+
+              values.push(value);
+          });
+
+          if (!isValid) return;
+
+          const [usersAffected, ease, needsMet, complexity] = values;
+          const unavailableMeasures = usabilityFields
+              .filter((field, index) => values[index] === null)
+              .map(field => field.label);
+
+          if (unavailableMeasures.length > 0) {
+              usabilityResultDiv.innerHTML = `
+                  <p><strong>Priority score unavailable</strong></p>
+                  <p>N/A is not the same as zero. Add valid study averages for ${unavailableMeasures.join(', ')} to calculate a complete score.</p>`;
+              return;
+          }
+
+          const difficultyScore = (5 - ease) + (5 - needsMet) + complexity;
+          const totalScore = usersAffected + difficultyScore;
+
+          usabilityResultDiv.innerHTML = `
+              <p><strong>Users Affected:</strong> ${formatScore(usersAffected)} / 10</p>
+              <p><strong>Difficulty Score:</strong> ${formatScore(difficultyScore)} / 15</p>
+              <p><strong>Total Priority Score:</strong> ${formatScore(totalScore)} / 25</p>
+              <p class="formula-note">Difficulty = (5 − ease) + (5 − needs met) + complexity</p>`;
+      });
+  }
+
+  function formatScore(value) {
+      return Number.isInteger(value) ? value.toString() : value.toFixed(1);
+  }
 
   // --- Logic for Foundational Insights Calculate Button ---
   if (calculateFoundationalButton) {

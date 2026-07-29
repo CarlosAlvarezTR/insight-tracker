@@ -23,11 +23,114 @@
       </section>
 
       <section id="usability-options" class="hidden">
-        <!-- Content for Usability Issues will go here -->
-        <h2>Usability issues scoring</h2>
+        <h2>Usability Issues Scoring</h2>
         <p>
-          You've chosen to score Usability Issues. Options will appear here.
+          Enter the study averages below to calculate the issue&apos;s severity and
+          priority. Select N/A when a measure was not collected.
         </p>
+
+        <div class="form-group">
+          <label for="usability-insight-text">Describe the Issue:</label>
+          <textarea
+            id="usability-insight-text"
+            rows="4"
+            placeholder="e.g., Users cannot locate the export action after completing a report..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="usability-product-name">Specific Product/Feature (optional):</label>
+          <input
+            type="text"
+            id="usability-product-name"
+            placeholder="e.g., 'Report Export'"
+          />
+        </div>
+
+        <fieldset class="form-group score-fieldset">
+          <legend>1. Average Number of Users Affected (0-10):</legend>
+          <div class="score-input-row">
+            <input
+              type="number"
+              id="score-users-affected"
+              min="0"
+              max="10"
+              step="0.1"
+              placeholder="0-10"
+              aria-describedby="hint-users-affected error-users-affected"
+            />
+            <label class="na-option" for="na-users-affected">
+              <input type="checkbox" id="na-users-affected" /> N/A
+            </label>
+          </div>
+          <small class="input-hint" id="hint-users-affected">Average the number of participants affected across the study.</small>
+          <span class="error-message" id="error-users-affected"></span>
+        </fieldset>
+
+        <fieldset class="form-group score-fieldset">
+          <legend>2. Average Ease of Use (0-5):</legend>
+          <div class="score-input-row">
+            <input
+              type="number"
+              id="score-ease"
+              min="0"
+              max="5"
+              step="0.1"
+              placeholder="0-5"
+              aria-describedby="hint-ease error-ease"
+            />
+            <label class="na-option" for="na-ease">
+              <input type="checkbox" id="na-ease" /> N/A
+            </label>
+          </div>
+          <small class="input-hint" id="hint-ease">0=very difficult, 5=very easy. This positive measure is reversed in the difficulty score.</small>
+          <span class="error-message" id="error-ease"></span>
+        </fieldset>
+
+        <fieldset class="form-group score-fieldset">
+          <legend>3. Average Needs Met (0-5):</legend>
+          <div class="score-input-row">
+            <input
+              type="number"
+              id="score-needs-met"
+              min="0"
+              max="5"
+              step="0.1"
+              placeholder="0-5"
+              aria-describedby="hint-needs-met error-needs-met"
+            />
+            <label class="na-option" for="na-needs-met">
+              <input type="checkbox" id="na-needs-met" /> N/A
+            </label>
+          </div>
+          <small class="input-hint" id="hint-needs-met">0=does not meet needs, 5=fully meets needs. This positive measure is reversed in the difficulty score.</small>
+          <span class="error-message" id="error-needs-met"></span>
+        </fieldset>
+
+        <fieldset class="form-group score-fieldset">
+          <legend>4. Average Complexity (0-5):</legend>
+          <div class="score-input-row">
+            <input
+              type="number"
+              id="score-complexity"
+              min="0"
+              max="5"
+              step="0.1"
+              placeholder="0-5"
+              aria-describedby="hint-complexity error-complexity"
+            />
+            <label class="na-option" for="na-complexity">
+              <input type="checkbox" id="na-complexity" /> N/A
+            </label>
+          </div>
+          <small class="input-hint" id="hint-complexity">0=not complex, 5=very complex.</small>
+          <span class="error-message" id="error-complexity"></span>
+        </fieldset>
+
+        <button id="btn-calculate-usability">Calculate Priority</button>
+
+        <div id="usability-result" class="result-display" aria-live="polite"></div>
+
         <button class="back-button">Go Back</button>
       </section>
 
