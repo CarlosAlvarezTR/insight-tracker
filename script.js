@@ -181,22 +181,49 @@ document.addEventListener('DOMContentLoaded', () => {
           const unavailableMeasures = usabilityFields
               .filter((field, index) => values[index] === null)
               .map(field => field.label);
+          const availableContributions = [
+              usersAffected,
+              ease === null ? null : 5 - ease,
+              needsMet === null ? null : 5 - needsMet,
+              complexity
+          ];
+          const contributionMaximums = [10, 5, 5, 5];
+          const availableMaximum = availableContributions.reduce(
+              (sum, contribution, index) => contribution === null ? sum : sum + contributionMaximums[index],
+              0
+          );
 
-          if (unavailableMeasures.length > 0) {
+          if (availableMaximum === 0) {
               usabilityResultDiv.innerHTML = `
                   <p><strong>Priority score unavailable</strong></p>
-                  <p>N/A is not the same as zero. Add valid study averages for ${unavailableMeasures.join(', ')} to calculate a complete score.</p>`;
+                  <p>Enter at least one study average to calculate a normalized score.</p>`;
               return;
           }
 
-          const difficultyScore = (5 - ease) + (5 - needsMet) + complexity;
-          const totalScore = usersAffected + difficultyScore;
+          const availableTotal = availableContributions.reduce(
+              (sum, contribution) => contribution === null ? sum : sum + contribution,
+              0
+          );
+          const totalScore = availableTotal / availableMaximum * 25;
+          const difficultyContributions = availableContributions.slice(1);
+          const difficultyAvailableMaximum = difficultyContributions.reduce(
+              (sum, contribution, index) => contribution === null ? sum : sum + contributionMaximums[index + 1],
+              0
+          );
+          const difficultyAvailableTotal = difficultyContributions.reduce(
+              (sum, contribution) => contribution === null ? sum : sum + contribution,
+              0
+          );
+          const difficultyScore = difficultyAvailableMaximum === 0
+              ? null
+              : difficultyAvailableTotal / difficultyAvailableMaximum * 15;
+          const isNormalized = unavailableMeasures.length > 0;
 
           usabilityResultDiv.innerHTML = `
-              <p><strong>Users Affected:</strong> ${formatScore(usersAffected)} / 10</p>
-              <p><strong>Difficulty Score:</strong> ${formatScore(difficultyScore)} / 15</p>
-              <p><strong>Total Priority Score:</strong> ${formatScore(totalScore)} / 25</p>
-              <p class="formula-note">Difficulty = (5 − ease) + (5 − needs met) + complexity</p>`;
+              <p><strong>Users Affected:</strong> ${usersAffected === null ? 'N/A' : `${formatScore(usersAffected)} / 10`}</p>
+              <p><strong>Difficulty Score:</strong> ${difficultyScore === null ? 'N/A' : `${formatScore(difficultyScore)} / 15`}</p>
+              <p><strong>${isNormalized ? 'Normalized ' : ''}Total Priority Score:</strong> ${formatScore(totalScore)} / 25</p>
+              ${isNormalized ? `<p class="formula-note">Normalized from the available measures. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">Difficulty = (5 − ease) + (5 − needs met) + complexity</p>'}`;
       });
   }
 
