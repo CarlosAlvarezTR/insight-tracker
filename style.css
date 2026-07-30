@@ -117,6 +117,19 @@ main { min-height: 100vh; }
 .result-content saf-button { margin-top: var(--saf-spacing-2); }
 .disclosure-copy { padding-block: var(--saf-spacing-4); }
 
+.faq-section,
+.faq-heading,
+.faq-list,
+.framework-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-section { gap: var(--saf-spacing-5); }
+.faq-heading { gap: var(--saf-spacing-2); }
+.faq-list { gap: var(--saf-spacing-2); }
+.framework-copy { gap: var(--saf-spacing-3); }
+
 @media (max-width: 767px) {
   .brand-band saf-container { min-height: var(--saf-spacing-10); }
   .selection-page,
