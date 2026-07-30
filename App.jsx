@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import {
   SafAlert,
+  SafAnchor,
   SafBadge,
   SafButton,
   SafCard,
@@ -180,12 +181,43 @@ function UsabilityTrack({ onBack }) {
   );
 }
 
+function ScoringFaq() {
+  const frameworkUrl = "https://trten.sharepoint.com/sites/LegalUXResearchTeam/How%20We%20Work/Forms/AllItems.aspx?id=%2Fsites%2FLegalUXResearchTeam%2FHow%20We%20Work%2FUXR%20Guidance%2D%20Assessing%20Insight%20Severity%20%26%20Priority%2Epdf&parent=%2Fsites%2FLegalUXResearchTeam%2FHow%20We%20Work";
+
+  return (
+    <section className="faq-section" aria-labelledby="faq-heading">
+      <div className="faq-heading">
+        <SafText appearance="eyebrow-heavy-md" className="eyebrow">Scoring guidance</SafText>
+        <SafText id="faq-heading" appearance="heading-xl">Frequently asked questions</SafText>
+        <SafText appearance="body-default-md" className="subtle">Understand the calculations before sharing a recommended score.</SafText>
+      </div>
+      <div className="faq-list">
+        <SafDisclosure summary="How is a foundational insight score calculated?">
+          <div className="disclosure-copy"><SafText appearance="body-default-md">The applicable 0–5 ratings are averaged, then multiplied by 3 to produce a score out of 15. Scores of 12–15 are high impact, 8–less than 12 are moderate impact, 4–less than 8 are low impact, and below 4 indicates no impact.</SafText></div>
+        </SafDisclosure>
+        <SafDisclosure summary="How is a usability issue score calculated?">
+          <div className="disclosure-copy"><SafText appearance="body-default-md">Frequency is converted to a 0–5 rating by dividing participants affected by total participants, then multiplying by 5. That rating and the applicable impact ratings are averaged equally. Averages of 4–5 are critical, 3–less than 4 are major, 2–less than 3 are moderate, and below 2 are minor.</SafText></div>
+        </SafDisclosure>
+        <SafDisclosure summary="What happens when I select N/A?">
+          <div className="disclosure-copy"><SafText appearance="body-default-md">N/A removes that factor from the calculation rather than treating it as zero. The remaining applicable factors are weighted equally, so an unassessed dimension does not lower the recommendation. At least one valid observation is required.</SafText></div>
+        </SafDisclosure>
+        <SafDisclosure summary="Where can I read the original framework?">
+          <div className="disclosure-copy framework-copy">
+            <SafText appearance="body-default-md">The original guidance paper provides the background for this approach. Some language and calculation details in the paper may not reflect the latest version of this tool.</SafText>
+            <SafAnchor href={frameworkUrl} target="_blank" rel="noopener noreferrer" appearance="anchor">Open the framework paper in SharePoint</SafAnchor>
+          </div>
+        </SafDisclosure>
+      </div>
+    </section>
+  );
+}
+
 function PathSelection({ onSelect }) {
   return (
     <section className="selection-page">
       <div className="hero-copy">
-        <SafText appearance="eyebrow-heavy-md" className="eyebrow">Research operations toolkit</SafText>
-        <SafText appearance="heading-3xl">Turn research evidence into a clear impact score</SafText>
+        <SafText appearance="eyebrow-heavy-md" className="eyebrow"></SafText>
+        <SafText appearance="heading-3xl">Customer impact scoring tool</SafText>
         <SafText appearance="body-default-lg" className="subtle hero-description">Choose the framework that matches your finding. Each path creates a consistent recommendation ready to add to ADO.</SafText>
       </div>
       <div className="path-grid">
@@ -203,6 +235,8 @@ function PathSelection({ onSelect }) {
         </SafCard>
       </div>
       <SafAlert appearance="neutral">Not sure which path to use? Choose usability for an observed interaction problem. Choose foundational for broader learning about customer needs or opportunities.</SafAlert>
+      <SafDivider />
+      <ScoringFaq />
     </section>
   );
 }
