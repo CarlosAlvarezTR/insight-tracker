@@ -31,24 +31,7 @@
           Score what you observed during the study. Select N/A when an impact
           could not be assessed; the available observations will be normalized.
         </p>
-
-        <div class="form-group">
-          <label for="usability-insight-text">Describe the Issue (optional):</label>
-          <textarea
-            id="usability-insight-text"
-            rows="4"
-            placeholder="e.g., Users cannot locate the export action after completing a report..."
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="usability-product-name">Specific Product/Feature (optional):</label>
-          <input
-            type="text"
-            id="usability-product-name"
-            placeholder="e.g., 'Report Export'"
-          />
-        </div>
+        <p class="context-note">Use your research notes for context; this tool only calculates severity.</p>
 
         <fieldset class="form-group score-fieldset">
           <legend>1. How frequent the issue occurred:</legend>
@@ -104,11 +87,13 @@
 
         <div id="usability-result" class="result-display" aria-live="polite"></div>
 
-        <aside class="score-explanation" aria-labelledby="usability-score-explanation">
-          <h3 id="usability-score-explanation">How this score is calculated</h3>
-          <p>Frequency is based on the share of participants who experienced the issue and is converted to a 0–5 rating. That rating is averaged equally with your ease-of-use, perceived-complexity, and onboarding-impact ratings.</p>
-          <p>The average becomes a severity level: 4–5 is <strong>1 — Critical</strong>, 3–less than 4 is <strong>2 — Major</strong>, 2–less than 3 is <strong>3 — Moderate</strong>, and below 2 is <strong>4 — Minor</strong>. If you select N/A, the tool averages only the available factors.</p>
-        </aside>
+        <details class="score-explanation">
+          <summary>How scoring works</summary>
+          <div class="score-explanation-content">
+            <p>Frequency is based on the share of participants who experienced the issue and is converted to a 0–5 rating. That rating is averaged equally with your ease-of-use, perceived-complexity, and onboarding-impact ratings.</p>
+            <p>The average becomes a severity level: 4–5 is <strong>1 — Critical</strong>, 3–less than 4 is <strong>2 — Major</strong>, 2–less than 3 is <strong>3 — Moderate</strong>, and below 2 is <strong>4 — Minor</strong>. If you select N/A, the tool averages only the available factors.</p>
+          </div>
+        </details>
 
         <button class="back-button">Go Back</button>
       </section>
@@ -119,28 +104,8 @@
           <button class="back-button back-button-top" type="button">Back to insight types</button>
         </div>
         <h2>Foundational insights</h2>
-        <p>
-          Enter the details of your insight below to calculate its
-          impact score.
-        </p>
-
-        <div class="form-group">
-          <label for="insight-text">Describe the insight (optional):</label>
-          <textarea
-            id="insight-text"
-            rows="4"
-            placeholder="e.g., Users struggle to find the checkout button on mobile..."
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="product-name">Specific Product/Feature (optional):</label>
-          <input
-            type="text"
-            id="product-name"
-            placeholder="e.g., 'Our Mobile App Checkout'"
-          />
-        </div>
+        <p>Rate the observed contribution of your insight to calculate its impact score.</p>
+        <p class="context-note">Use your research notes for context; this tool only calculates impact.</p>
 
         <div class="form-group">
           <label for="score-jtbd"
@@ -203,11 +168,13 @@
           <!-- Result will be displayed here -->
         </div>
 
-        <aside class="score-explanation" aria-labelledby="foundational-score-explanation">
-          <h3 id="foundational-score-explanation">How this score is calculated</h3>
-          <p>Rate how strongly the insight contributes to the core job, improves process efficiency, and enhances customer delight. Each factor is scored from 0 (no contribution) to 5 (significant contribution).</p>
-          <p>The three ratings are added together with equal weight. The highest possible foundational impact score is 15.</p>
-        </aside>
+        <details class="score-explanation">
+          <summary>How scoring works</summary>
+          <div class="score-explanation-content">
+            <p>Rate how strongly the insight contributes to the core job, improves process efficiency, and enhances customer delight. Each factor is scored from 0 (no contribution) to 5 (significant contribution).</p>
+            <p>The three ratings are added together with equal weight. The highest possible foundational impact score is 15.</p>
+          </div>
+        </details>
 
         <button class="back-button">Go Back</button>
       </section>

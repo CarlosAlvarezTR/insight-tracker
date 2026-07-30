@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButtons = document.querySelectorAll('.back-button'); // Get all back buttons
 
   // --- Code for Foundational Insights Scoring (elements defined early for clearAllErrors) ---
-  const insightTextInput = document.getElementById('insight-text');
-  const productNameInput = document.getElementById('product-name');
   const scoreJtbdInput = document.getElementById('score-jtbd');
   const scoreEfficiencyInput = document.getElementById('score-efficiency');
   const scoreDelightInput = document.getElementById('score-delight');
@@ -80,6 +78,30 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayError(inputElement, errorSpan, message) {
       if (errorSpan) errorSpan.textContent = message;
       if (inputElement) inputElement.classList.add('input-error');
+  }
+
+  function resetScoringForm(section, result) {
+      if (!section) return;
+
+      section.querySelectorAll('input').forEach(input => {
+          if (input.type === 'checkbox') input.checked = false;
+          else input.value = '';
+          input.disabled = false;
+          input.classList.remove('input-error');
+      });
+      section.querySelectorAll('.error-message').forEach(error => {
+          error.textContent = '';
+      });
+      if (result) result.innerHTML = '';
+
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      section.querySelector('input[type="number"]')?.focus({ preventScroll: true });
+  }
+
+  function addScoreAnotherHandler(result, section) {
+      result?.querySelector('.score-another-button')?.addEventListener('click', () => {
+          resetScoringForm(section, result);
+      });
   }
 
   // --- Function to show initial choices and hide others ---
@@ -244,7 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
           usabilityResultDiv.innerHTML = `
               <p class="severity-result"><strong>${severity.level} — ${severity.label}</strong></p>
               <p><strong>${isNormalized ? 'Normalized ' : ''}observational average:</strong> ${formatScore(observationalAverage)} / 5</p>
-              ${isNormalized ? `<p class="formula-note">Calculated from ${availableObservations.length} of 4 factors. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">All four observational factors are equally weighted.</p>'}`;
+              ${isNormalized ? `<p class="formula-note">Calculated from ${availableObservations.length} of 4 factors. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">All four observational factors are equally weighted.</p>'}
+              <button class="score-another-button" type="button">Score another issue</button>`;
+          addScoreAnotherHandler(usabilityResultDiv, usabilityOptionsSection);
       });
   }
 
@@ -339,7 +363,9 @@ document.addEventListener('DOMContentLoaded', () => {
               // const productNameValue = productNameInput ? productNameInput.value : "N/A"; // Example
               foundationalResultDiv.innerHTML = `
                   <p><strong>Total Score:</strong> ${totalScore}</p>
-                  <p><strong>Impact Level:</strong> ${impactLevel}</p>`;
+                  <p><strong>Impact Level:</strong> ${impactLevel}</p>
+                  <button class="score-another-button" type="button">Score another insight</button>`;
+              addScoreAnotherHandler(foundationalResultDiv, foundationalOptionsSection);
           } else {
               console.warn("Foundational result div 'foundational-result' not found.");
           }
