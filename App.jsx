@@ -216,6 +216,7 @@ function PathSelection({ onSelect }) {
   return (
     <section className="selection-page">
       <div className="hero-copy">
+        <SafText appearance="eyebrow-heavy-md" className="eyebrow"></SafText>
         <SafText appearance="heading-3xl">Customer impact scoring tool</SafText>
         <SafText appearance="body-default-lg" className="subtle hero-description">Choose the framework that matches your finding. Each path creates a consistent recommendation ready to add to ADO.</SafText>
       </div>
