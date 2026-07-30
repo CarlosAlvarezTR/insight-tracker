@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorJtbdSpan = document.getElementById('error-jtbd');
   const errorEfficiencySpan = document.getElementById('error-efficiency');
   const errorDelightSpan = document.getElementById('error-delight');
+  const foundationalFields = [
+      { input: scoreJtbdInput, na: document.getElementById('na-jtbd'), error: errorJtbdSpan, label: 'customer goal or task' },
+      { input: scoreEfficiencyInput, na: document.getElementById('na-efficiency'), error: errorEfficiencySpan, label: 'task or process efficiency' },
+      { input: scoreDelightInput, na: document.getElementById('na-delight'), error: errorDelightSpan, label: 'customer satisfaction or delight' }
+  ];
 
   // --- Code for Usability Issues Scoring ---
   const calculateUsabilityButton = document.getElementById('btn-calculate-usability');
@@ -276,94 +281,86 @@ document.addEventListener('DOMContentLoaded', () => {
       return Number.isInteger(value) ? value.toString() : value.toFixed(1);
   }
 
+  foundationalFields.forEach(field => {
+      if (!field.input || !field.na) return;
+
+      field.na.addEventListener('change', () => {
+          field.input.disabled = field.na.checked;
+          if (field.na.checked) {
+              field.input.value = '';
+              field.input.classList.remove('input-error');
+              if (field.error) field.error.textContent = '';
+          }
+          if (foundationalResultDiv) foundationalResultDiv.innerHTML = '';
+      });
+
+      field.input.addEventListener('input', () => {
+          field.input.classList.remove('input-error');
+          if (field.error) field.error.textContent = '';
+          if (foundationalResultDiv) foundationalResultDiv.innerHTML = '';
+      });
+  });
+
   // --- Logic for Foundational Insights Calculate Button ---
   if (calculateFoundationalButton) {
       calculateFoundationalButton.addEventListener('click', () => {
-          clearAllErrors(); // Clear previous errors and results first
-          let isValid = true; // Flag to track overall validity
+          clearAllErrors();
+          let isValid = true;
+          const ratings = [];
+          const unavailableDimensions = [];
 
-          // 1. Get and validate JTBD Score
-          let scoreJtbd = NaN;
-          if (scoreJtbdInput && errorJtbdSpan) { // Ensure input and its error span exist
-              scoreJtbd = parseInt(scoreJtbdInput.value, 10);
-              if (isNaN(scoreJtbd) || scoreJtbd < 0 || scoreJtbd > 5) {
-                  displayError(scoreJtbdInput, errorJtbdSpan, 'Please enter a number between 0 and 5.');
+          foundationalFields.forEach(field => {
+              if (!field.input || !field.na || !field.error) {
                   isValid = false;
+                  return;
               }
-          } else if (scoreJtbdInput) { // Input exists but error span might not (less ideal)
-              console.warn("JTBD score input found, but its error span 'error-jtbd' is missing.");
-              isValid = false; 
-          } else { 
-              isValid = false; 
-              console.warn("JTBD score input 'score-jtbd' not found.");
-          }
 
-          // 2. Get and validate Efficiency Score
-          let scoreEfficiency = NaN;
-          if (scoreEfficiencyInput && errorEfficiencySpan) {
-              scoreEfficiency = parseInt(scoreEfficiencyInput.value, 10);
-              if (isNaN(scoreEfficiency) || scoreEfficiency < 0 || scoreEfficiency > 5) {
-                  displayError(scoreEfficiencyInput, errorEfficiencySpan, 'Please enter a number between 0 and 5.');
+              if (field.na.checked) {
+                  unavailableDimensions.push(field.label);
+                  return;
+              }
+
+              const value = Number(field.input.value);
+              if (!Number.isInteger(value) || value < 0 || value > 5) {
+                  displayError(field.input, field.error, 'Please enter a whole number between 0 and 5, or select N/A.');
                   isValid = false;
+                  return;
               }
-          } else if (scoreEfficiencyInput) {
-              console.warn("Efficiency score input found, but its error span 'error-efficiency' is missing.");
-              isValid = false;
-          } else {
-               isValid = false;
-               console.warn("Efficiency score input 'score-efficiency' not found.");
-          }
 
-          // 3. Get and validate Delight Score
-          let scoreDelight = NaN;
-          if (scoreDelightInput && errorDelightSpan) {
-              scoreDelight = parseInt(scoreDelightInput.value, 10);
-              if (isNaN(scoreDelight) || scoreDelight < 0 || scoreDelight > 5) {
-                  displayError(scoreDelightInput, errorDelightSpan, 'Please enter a number between 0 and 5.');
-                  isValid = false;
-              }
-          } else if (scoreDelightInput) {
-               console.warn("Delight score input found, but its error span 'error-delight' is missing.");
-               isValid = false;
-          } else {
-              isValid = false;
-              console.warn("Delight score input 'score-delight' not found.");
-          }
+              ratings.push(value);
+          });
 
-          // 4. If any validation failed, stop
-          if (!isValid) {
-              // Optional: A general message in the main result area if any error occurs
-              // if (foundationalResultDiv) {
-              // foundationalResultDiv.innerHTML = `<p style="color: red;">Please correct the errors above before calculating.</p>`;
-              // }
+          if (!isValid) return;
+
+          if (ratings.length === 0) {
+              foundationalResultDiv.innerHTML = `
+                  <p><strong>Impact score unavailable</strong></p>
+                  <p>Select at least one applicable dimension to calculate a score.</p>`;
               return;
           }
 
-          // 5. Calculate the total score (only if all inputs are valid)
-          const totalScore = scoreJtbd + scoreEfficiency + scoreDelight;
+          const averageScore = ratings.reduce((sum, value) => sum + value, 0) / ratings.length;
+          const totalScore = averageScore * 3;
 
           // 6. Determine the impact level
           let impactLevel = '';
-          if (totalScore >= 12 && totalScore <= 15) {
+          if (totalScore >= 12) {
               impactLevel = '1 - High impact';
-          } else if (totalScore >= 8 && totalScore <= 11) {
+          } else if (totalScore >= 8) {
               impactLevel = '2 - Moderate impact';
-          } else if (totalScore >= 4 && totalScore <= 7) {
+          } else if (totalScore >= 4) {
               impactLevel = '3 - Low impact';
-          } else if (totalScore >= 0 && totalScore <= 3) {
-              impactLevel = '0 - No impact';
           } else {
-              // This case should ideally not be reached if min/max on inputs and the JS validation works
-              impactLevel = 'Score out of expected range. Please check inputs.'; 
+              impactLevel = '0 - No impact';
           }
 
           // 7. Display the result
           if (foundationalResultDiv) {
-              // const insightTextValue = insightTextInput ? insightTextInput.value : "N/A"; // Example of getting insight text
-              // const productNameValue = productNameInput ? productNameInput.value : "N/A"; // Example
+              const isNormalized = unavailableDimensions.length > 0;
               foundationalResultDiv.innerHTML = `
-                  <p><strong>Total Score:</strong> ${totalScore}</p>
+                  <p><strong>${isNormalized ? 'Normalized ' : ''}Total Score:</strong> ${formatScore(totalScore)} / 15</p>
                   <p><strong>Impact Level:</strong> ${impactLevel}</p>
+                  ${isNormalized ? `<p class="formula-note">Calculated from ${ratings.length} of 3 dimensions. Excluded as N/A: ${unavailableDimensions.join(', ')}.</p>` : '<p class="formula-note">All three dimensions are equally weighted.</p>'}
                   <button class="score-another-button" type="button">Score another insight</button>`;
               addScoreAnotherHandler(foundationalResultDiv, foundationalOptionsSection);
           } else {

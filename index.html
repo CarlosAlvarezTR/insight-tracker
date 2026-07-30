@@ -107,56 +107,35 @@
         <p>Rate the observed contribution of your insight to calculate its impact score.</p>
         <p class="context-note">Use your research notes for context; this tool only calculates impact.</p>
 
-        <div class="form-group">
-          <label for="score-jtbd"
-            >1. Contribution to Core JTBD/CXO (0-5):</label
-          >
-          <input
-            type="number"
-            id="score-jtbd"
-            min="0"
-            max="5"
-            placeholder="0-5"
-            aria-describedby="error-jtbd"
-          />
-          <small class="input-hint">0=not at all, 5=significantly</small>
+        <fieldset class="form-group score-fieldset">
+          <legend>1. How strongly does this insight explain the customer’s ability to accomplish an existing goal or task?</legend>
+          <div class="score-input-row">
+            <input type="number" id="score-jtbd" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-jtbd error-jtbd" />
+            <label class="na-option" for="na-jtbd"><input type="checkbox" id="na-jtbd" /> N/A</label>
+          </div>
+          <small class="input-hint" id="hint-jtbd">0=no meaningful connection · 3=provides useful understanding · 5=provides critical understanding</small>
           <span class="error-message" id="error-jtbd"></span>
-          <!-- Error message for JTBD -->
-        </div>
+        </fieldset>
 
-        <div class="form-group">
-          <label for="score-efficiency"
-            >2. Improvement to Process Efficiency (0-5):</label
-          >
-          <input
-            type="number"
-            id="score-efficiency"
-            min="0"
-            max="5"
-            placeholder="0-5"
-            aria-describedby="error-efficiency"
-          />
-          <small class="input-hint">0=not at all, 5=significantly</small>
+        <fieldset class="form-group score-fieldset">
+          <legend>2. How strongly does this insight reveal an opportunity to improve task or process efficiency?</legend>
+          <div class="score-input-row">
+            <input type="number" id="score-efficiency" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-efficiency error-efficiency" />
+            <label class="na-option" for="na-efficiency"><input type="checkbox" id="na-efficiency" /> N/A</label>
+          </div>
+          <small class="input-hint" id="hint-efficiency">0=no efficiency implications · 3=reveals meaningful friction or inefficiency · 5=reveals major friction or inefficiency</small>
           <span class="error-message" id="error-efficiency"></span>
-          <!-- Error message for Efficiency -->
-        </div>
+        </fieldset>
 
-        <div class="form-group">
-          <label for="score-delight"
-            >3. Enhancement to Customer Delight (0-5):</label
-          >
-          <input
-            type="number"
-            id="score-delight"
-            min="0"
-            max="5"
-            placeholder="0-5"
-            aria-describedby="error-delight"
-          />
-          <small class="input-hint">0=not at all, 5=significantly</small>
+        <fieldset class="form-group score-fieldset">
+          <legend>3. How strongly does this insight explain what affects customer satisfaction or delight?</legend>
+          <div class="score-input-row">
+            <input type="number" id="score-delight" min="0" max="5" step="1" placeholder="0–5" aria-describedby="hint-delight error-delight" />
+            <label class="na-option" for="na-delight"><input type="checkbox" id="na-delight" /> N/A</label>
+          </div>
+          <small class="input-hint" id="hint-delight">0=no meaningful effect · 3=explains a noticeable effect · 5=explains a major effect</small>
           <span class="error-message" id="error-delight"></span>
-          <!-- Error message for Delight -->
-        </div>
+        </fieldset>
 
         <button id="btn-calculate-foundational">Calculate Impact</button>
 
@@ -171,8 +150,8 @@
         <details class="score-explanation">
           <summary>How scoring works</summary>
           <div class="score-explanation-content">
-            <p>Rate how strongly the insight contributes to the core job, improves process efficiency, and enhances customer delight. Each factor is scored from 0 (no contribution) to 5 (significant contribution).</p>
-            <p>The three ratings are added together with equal weight. The highest possible foundational impact score is 15.</p>
+            <p>Rate how strongly the insight explains a customer’s ability to accomplish a goal, reveals efficiency opportunities, and explains satisfaction or delight. Each applicable dimension is scored from 0 to 5 with equal weight.</p>
+            <p>If a dimension does not apply, select N/A. The tool averages the available ratings and normalizes the result to a 15-point scale, so an N/A does not lower the score. A score requires at least one applicable dimension.</p>
           </div>
         </details>
 
