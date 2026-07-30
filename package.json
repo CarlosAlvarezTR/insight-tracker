@@ -1,0 +1,21 @@
+{
+  "name": "insight-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.0.6"
+  },
+  "dependencies": {
+    "@thomsonreuters/saffron-core-components-prototyping-only": "^3.21.3",
+    "@thomsonreuters/saffron-core-styles-prototyping-only": "^3.11.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}

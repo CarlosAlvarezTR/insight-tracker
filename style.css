@@ -1,179 +1,129 @@
-/*FONTS*/
-@font-face {
-    font-family: 'Clairo'; 
-    src: url('fonts/Clario-Regular.woff2') format('woff2'), Arial, serif;
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Clairo'; 
-    src: url('fonts/Clario-Bold.woff2') format('woff2'), Arial, serif;
-    font-weight: bold;
-    font-style: bold;
-}
+* { box-sizing: border-box; }
 
-
-/*-----------*/
 body {
-    font-family: 'Clairo', serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Make sure content is centered vertically on the page */
-    margin: 0;
-    background-color: #fff;
-    text-align: center; /* Center text within elements */
+  margin: 0;
+  background: var(--saf-color-background-default);
+  color: var(--saf-color-text-strong);
+  font-family: var(--saf-font-family-source-sans-3);
 }
 
-.container {
-    padding: 20px 40px;
-    border-radius: 8px;
-    /*box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+main { min-height: 100vh; }
+
+.brand-band {
+  background: var(--saf-color-racing-green-800);
+  color: var(--saf-color-text-knockout);
+  border-bottom: var(--saf-line-width-thin) solid var(--saf-color-border-subtle);
 }
 
-header {
-    color: #D64000;
-    margin-bottom: 30px;
-    font-family: 'Clairo', serif;
-}
-header p {
-    color: #000;
+.brand-band saf-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--saf-spacing-12);
 }
 
-section h2 {
-    color: #D64000;
-    margin-bottom: 30px;
+.selection-page,
+.track-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--saf-spacing-6);
+  padding-block: var(--saf-spacing-10);
 }
 
-#initial-choices button {
-    background-color: #123015;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+.hero-copy,
+.track-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--saf-spacing-3);
+  max-width: var(--saf-breakpoint-md);
 }
 
-#initial-choices button:hover {
-    background-color: #EDF2F0;
-    border-color: #1D4B34;
-    border-width: 2px;
-    border-style: solid;
-    color: #123015;
+.eyebrow { color: var(--saf-color-sky-600); }
+.subtle { color: var(--saf-color-text-subtle); }
+.hero-description,
+.intro-copy { max-width: var(--saf-breakpoint-sm); }
+
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--saf-spacing-6);
 }
 
-.hidden {
-    display: none; /* This class hides elements */
+.path-card,
+.dimension-card { height: 100%; }
+
+.path-card::part(content) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--saf-spacing-5);
 }
 
-/* Styling for the content sections (can be expanded later) */
-#usability-options, #foundational-options {
-    margin-top: 30px;
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 5px;
+.path-card saf-button { margin-top: auto; }
+.top-actions { display: flex; align-items: center; justify-content: flex-start; }
+
+.dimensions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--saf-spacing-4);
 }
 
-.back-button {
-    margin-top: 20px;
-    padding: 8px 15px;
-    background-color: #fff;
-    border-color: #1D4B34;
-    border-width: 2px;
-    border-style: solid;
-    color: #1D4B34;
-    border-radius: 5px;
-    cursor: pointer;
+.dimension-card::part(content) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--saf-spacing-5);
 }
 
-.back-button:hover {
-    background-color: #EDF2F0;
-    border-color: #1D4B34;
-    border-width: 2px;
-    border-style: solid;
-    color: #123015;
-    padding: 8px 15px;
+.dimension-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--saf-spacing-4);
 }
 
-/*form*/
-
-.form-group {
-    margin-bottom: 15px;
-    text-align: left; /* Align labels and inputs to the left within the group */
+.dimension-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--saf-spacing-2);
 }
 
-.form-group label {
-    display: block; /* Makes the label take the full width */
-    margin-bottom: 5px;
-    font-weight: bold;
+.field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--saf-spacing-6);
 }
 
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group textarea {
-    width: 100%; /* Make inputs take full width of their container */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Important for width calculation with padding */
-    margin-bottom: 5px; /* Space for the small text if any */
+.frequency-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--saf-spacing-5);
 }
 
-.form-group small {
-    display: block;
-    color: #777;
-    font-size: 0.9em;
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--saf-spacing-4);
+  flex-wrap: wrap;
 }
 
-#btn-calculate-foundational {
-    background-color: #28a745; /* A green color */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 10px; /* Space above the button */
-    margin-bottom: 20px; /* Space below the button before the result */
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--saf-spacing-3);
 }
 
-#btn-calculate-foundational:hover {
-    background-color: #218838;
-}
+.result-content saf-button { margin-top: var(--saf-spacing-2); }
+.disclosure-copy { padding-block: var(--saf-spacing-4); }
 
-.result-display {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #e9ecef;
-    font-size: 1.1em;
-    text-align: center; /* Center the result text */
-}
-
-.result-display p {
-    margin: 0; /* Remove default paragraph margin */
-}
-
-/* Add to your style.css */
-
-.error-message {
-    display: block; /* So it appears on its own line below the input or small text */
-    color: #D64000; /* A standard error red color */
-    font-size: 0.9em;
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-/* You might also want to style invalid inputs visually */
-input:invalid {
-  border-color: #D64000;  /*Be careful with this, as HTML5 validation can trigger it preemptively*/
-}
-
-/* More specific styling for inputs that *we* mark as having an error via JS if needed */
-input.input-error {
-    border-color: #D64000;
-    box-shadow: 0 0 3px #D64000;
+@media (max-width: 767px) {
+  .brand-band saf-container { min-height: var(--saf-spacing-10); }
+  .selection-page,
+  .track-page { padding-block: var(--saf-spacing-6); }
+  .path-grid,
+  .field-row,
+  .frequency-grid { grid-template-columns: 1fr; }
+  .field-row,
+  .frequency-grid { align-items: start; }
 }
