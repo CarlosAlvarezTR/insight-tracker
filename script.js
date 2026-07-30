@@ -85,6 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (inputElement) inputElement.classList.add('input-error');
   }
 
+  function validateRatingImmediately(input, error) {
+      if (!input || !error) return;
+
+      if (input.value === '') {
+          input.classList.remove('input-error');
+          error.textContent = '';
+          return;
+      }
+
+      const value = Number(input.value);
+      if (!Number.isInteger(value) || value < 0 || value > 5) {
+          displayError(input, error, 'Incorrect number. Enter a whole number between 0 and 5, or select N/A.');
+          return;
+      }
+
+      input.classList.remove('input-error');
+      error.textContent = '';
+  }
+
   function resetScoringForm(section, result) {
       if (!section) return;
 
@@ -160,8 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       field.input.addEventListener('input', () => {
-          field.input.classList.remove('input-error');
-          if (field.error) field.error.textContent = '';
+          validateRatingImmediately(field.input, field.error);
           if (usabilityResultDiv) usabilityResultDiv.innerHTML = '';
       });
   });
@@ -269,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const isNormalized = unavailableMeasures.length > 0;
 
           usabilityResultDiv.innerHTML = `
+              <p class="result-label">Recommended impact score (to put in ADO)</p>
               <p class="severity-result"><strong>${severity.level} — ${severity.label}</strong></p>
               <p><strong>${isNormalized ? 'Normalized ' : ''}observational average:</strong> ${formatScore(observationalAverage)} / 5</p>
               ${isNormalized ? `<p class="formula-note">Calculated from ${availableObservations.length} of 4 factors. Excluded as N/A: ${unavailableMeasures.join(', ')}.</p>` : '<p class="formula-note">All four observational factors are equally weighted.</p>'}
@@ -295,8 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       field.input.addEventListener('input', () => {
-          field.input.classList.remove('input-error');
-          if (field.error) field.error.textContent = '';
+          validateRatingImmediately(field.input, field.error);
           if (foundationalResultDiv) foundationalResultDiv.innerHTML = '';
       });
   });
@@ -358,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (foundationalResultDiv) {
               const isNormalized = unavailableDimensions.length > 0;
               foundationalResultDiv.innerHTML = `
+                  <p class="result-label">Recommended impact score (to put in ADO)</p>
                   <p><strong>${isNormalized ? 'Normalized ' : ''}Total Score:</strong> ${formatScore(totalScore)} / 15</p>
                   <p><strong>Impact Level:</strong> ${impactLevel}</p>
                   ${isNormalized ? `<p class="formula-note">Calculated from ${ratings.length} of 3 dimensions. Excluded as N/A: ${unavailableDimensions.join(', ')}.</p>` : '<p class="formula-note">All three dimensions are equally weighted.</p>'}
