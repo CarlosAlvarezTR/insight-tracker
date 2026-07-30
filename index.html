@@ -54,19 +54,19 @@
           <legend>1. How frequent the issue occurred:</legend>
           <div class="score-input-row frequency-row">
             <div class="count-input">
-              <label for="affected-users">Affected users</label>
+              <label for="affected-users">Issue happend to this number of participants</label>
               <input type="number" id="affected-users" min="0" step="1" placeholder="e.g., 3" aria-describedby="hint-frequency error-frequency" />
             </div>
             <span class="count-separator" aria-hidden="true">of</span>
             <div class="count-input">
-              <label for="total-participants">Total participants</label>
+              <label for="total-participants">Total number of participants</label>
               <input type="number" id="total-participants" min="1" step="1" placeholder="e.g., 10" aria-describedby="hint-frequency error-frequency" />
             </div>
             <label class="na-option" for="na-frequency">
               <input type="checkbox" id="na-frequency" /> N/A
             </label>
           </div>
-          <small class="input-hint" id="hint-frequency">Enter the number of unique users affected out of all participants. The proportion is converted to 0–5.</small>
+          <small class="input-hint" id="hint-frequency">Enter the number of participants that experienced the issue out of all participants. The proportion is converted to 0–5.</small>
           <span class="error-message" id="error-frequency"></span>
         </fieldset>
 
